@@ -2,13 +2,19 @@ import { message } from 'ant-design-vue';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import authService from '../../services/auth-service';
+// import { useRouter } from 'vue-router';
+import { jwtDecode } from 'jwt-decode';
 
+// const router = useRouter();
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref(null);
     const token = ref(localStorage.getItem('token') || null);
-    const isAuth = ref(!!user.value && !!token.value);
+    const isAuth = ref(!!token.value);
     const email = ref(localStorage.getItem('email') || null);
+    const isAdmin = ref(localStorage.getItem('isAdmin') === 'true');
+    const scope = ref('');
+    // const role = ref(localStorage.getItem('role') || null);
     const loading = ref(false);
 
     // const user = ref(JSON.parse(localStorage.getItem('user')) || null);
@@ -17,16 +23,33 @@ export const useAuthStore = defineStore('auth', () => {
     // const email = ref(localStorage.getItem('email') || null);
     // const loading = ref(false);
 
+    // function decodeToken(token) {
+    //     try {
+    //         const decoded = jwtDecode(token);
+    //         console.log('Decoded token:', decoded);
+    //         role.value = decoded.scope;
+    //         email.value = decoded.sub;
+    //         localStorage.setItem('email', decoded.sub);
+    //         localStorage.setItem('role', decoded.scope);
+    //     } catch (error) {
+    //         console.error('Invalid token:', error);
+    //     }
+    // }
+
     function setAuth(data) {
         console.log('Setting auth data:', data);
         user.value = data.user;
         token.value = data.token;
         isAuth.value = true;
         email.value = data.email;
+        isAdmin.value = jwtDecode(data.token).scope === 'ROLE_ADMIN';
         localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', JSON.stringify(data.token));
         localStorage.setItem('isAuth', 'true');
         localStorage.setItem('email', data.email);
+        localStorage.setItem('isAdmin', isAdmin.value.toString());
+        // localStorage.setItem('isAdmin', isAdmin.value);
+        localStorage.setItem('scope', scope.value);
     }
 
     function clearAuth() {
@@ -34,32 +57,69 @@ export const useAuthStore = defineStore('auth', () => {
         token.value = null;
         isAuth.value = false;
         email.value = null;
+        isAdmin.value = false;
+        scope.value = '';
         localStorage.removeItem('user');
         localStorage.removeItem('token');
         localStorage.removeItem('isAuth');
         localStorage.removeItem('email');
+        localStorage.removeItem('isAdmin');
+        localStorage.removeItem('scope');
     }
 
     async function login(email, password) {
-        const response = await authService.login(email, password);
-        setAuth(response.data);
+        try {
+            loading.value = true;
+            const response = await authService.login(email, password);
+            setAuth(response.data);
+            // if (isAdmin.value) {
+            //     router.push('/admin/dashboard');
+            // } else {
+            //     router.push('/user/default');
+            // }
+            message.success('Logged in successfully');
+        } catch (error) {
+            message.error('Login failed. Please check your credentials.');
+            console.error('Login error:', error);
+        } finally {
+            loading.value = false;
+        }
     }
+
+    // async function login(email, password) {
+    //     try {
+    //         loading.value = true;
+    //         const response = await authService.login(email, password);
+    //         setAuth(response.data);
+    //         message.success('Logged in successfully');
+    //     } catch (error) {
+    //         message.error('Login failed. Please check your credentials.');
+    //         console.error('Login error:', error);
+    //     } finally {
+    //         loading.value = false;
+    //     }
+    // }
 
     async function register(data) {
         try {
+            loading.value = true;
             const response = await authService.register(data);
             setAuth(response.data);
+            message.success('Registered successfully');
             return response;
         } catch (error) {
             console.error('Registration error:', error);
+            message.error('Registration failed. Please try again.');
             throw error;
+        } finally {
+            loading.value = false;
         }
     }
 
     async function resendOTP() {
         try {
             await authService.resendOTP(email.value);
-            message.success('Verification code resent successfully');
+            message.success('Verification code has been resent');
             startCountdown();
         } catch (error) {
             console.error('Resend error:', error);
@@ -72,6 +132,7 @@ export const useAuthStore = defineStore('auth', () => {
             const response = await authService.verifyOTP(email, otp);
             console.log('Verification response:', response);
             message.success('OTP verified successfully');
+            // router.push('/user/default');
         } catch (error) {
             console.error('Verification error:', error);
             if (error.response && error.response.data && error.response.data.message) {
@@ -83,15 +144,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function logout() {
-        console.log('Initiating logout process...');
         try {
-            console.log('Token:', this.token);
-            await authService.logout(this.token);
-            console.log('Logout successful');
-            this.clearAuth();
+            await authService.logout(token.value);
+            message.success('Logged out successfully');
         } catch (error) {
-            console.error('Logout error:', error.response ? error.response.data : error.message);
-            throw error;
+            console.error('Logout error:', error);
+            message.error('Logout failed. Please try again.');
+        } finally {
+            clearAuth();
         }
     }
 
@@ -166,6 +226,8 @@ export const useAuthStore = defineStore('auth', () => {
         token,
         isAuth,
         email,
+        isAdmin,
+        scope,
         loading,
         login,
         logout,

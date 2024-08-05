@@ -101,7 +101,6 @@ const handleSignUp = async () => {
     } catch (error) {
         message.error('Registration failed. Please try again.');
     }
-
 };
 
 const validateForm = () => {

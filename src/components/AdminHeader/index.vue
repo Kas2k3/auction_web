@@ -10,7 +10,7 @@
                 <img src="../../assets/logo.png" alt="Logo" class="mt-2 mr-40 ml-6 h-20 w-30">
                 <div class="hidden sm:flex items-center justify-center space-x-2 ml-6">
                     <ul class="navbar-item font-bold cursor-pointer">
-                        <router-link to="/user/default" active-class="text-green-600">
+                        <router-link to="/admin/default" active-class="text-green-600">
                             <div class="w-full h-full p-5 flex items-center justify-center">
                                 <img src="../../assets/icon/home.svg" alt="Home" class="h-5 w-5 inline-block mr-2" />
                                 Home
@@ -20,7 +20,7 @@
 
                     <a-dropdown>
                         <a class="ant-dropdown-link font-bold cursor-pointer hover:text-teal-600">
-                            <router-link to="/user/product" class="block w-full h-full hover:text-teal-600 rounded"
+                            <router-link to="/admin/product" class="block w-full h-full hover:text-teal-600 rounded"
                                 active-class="text-teal-600">
                                 <div class="w-full h-full p-5 flex items-center justify-center">
                                     Auction Product
@@ -56,7 +56,7 @@
                     </a-dropdown>
                     <a-dropdown>
                         <a class="ant-dropdown-link font-bold cursor-pointer hover:text-teal-600">
-                            <router-link to="/user/session" class="block w-full h-full hover:text-teal-600 rounded"
+                            <router-link to="/admin/session" class="block w-full h-full hover:text-teal-600 rounded"
                                 active-class="text-teal-600">
                                 <div class="w-full h-full p-5 flex items-center justify-center">
                                     Auction Session
@@ -80,7 +80,7 @@
                     </a-dropdown>
                     <a-dropdown>
                         <a class="ant-dropdown-link font-bold cursor-pointer hover:text-teal-600">
-                            <router-link to="/user/news" class="block w-full h-full hover:text-teal-600 rounded"
+                            <router-link to="/admin/news" class="block w-full h-full hover:text-teal-600 rounded"
                                 active-class="text-teal-600">
                                 <div class="w-full h-full p-5 flex items-center justify-center">
                                     News
@@ -104,19 +104,19 @@
                     </a-dropdown>
 
                     <ul class="navbar-item font-bold cursor-pointer">
-                        <router-link to="/user/history" class="block w-full h-full hover:text-teal-600 rounded"
+                        <router-link to="/admin/history" class="block w-full h-full hover:text-teal-600 rounded"
                             active-class="text-teal-600">
                             <div class="w-full h-full p-5 flex items-center justify-center">History</div>
                         </router-link>
                     </ul>
                     <ul class="navbar-item font-bold cursor-pointer">
-                        <router-link to="/user/introduction" class="block w-full h-full p-5 hover:text-teal-600 rounded"
-                            active-class="text-teal-600">
+                        <router-link to="/admin/introduction"
+                            class="block w-full h-full p-5 hover:text-teal-600 rounded" active-class="text-teal-600">
                             <div class="w-full h-full flex items-center justify-center">Introduction</div>
                         </router-link>
                     </ul>
                     <ul class="navbar-item font-bold cursor-pointer">
-                        <router-link to="/user/contact" class="block w-full h-full hover:text-teal-600 rounded"
+                        <router-link to="/admin/contact" class="block w-full h-full hover:text-teal-600 rounded"
                             active-class="text-teal-600">
                             <div class="w-full h-full p-5 flex items-center justify-center">Contact</div>
                         </router-link>
@@ -141,6 +141,13 @@
                                 <img src="../../assets/icon/profile.svg" alt="Profile"
                                     class="h-5 w-5 inline-block mr-2" />
                                 Profile
+                            </a>
+                        </a-menu-item>
+                        <a-menu-item @click="navigateToAllProduct">
+                            <a class="font-bold flex items-center">
+                                <img src="../../assets/icon/asset-management.svg" alt="Asset Management"
+                                    class="h-5 w-5 inline-block mr-2" />
+                                Auction Session Management
                             </a>
                         </a-menu-item>
                         <a-menu-item @click="navigateToAllProduct">

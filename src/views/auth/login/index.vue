@@ -71,7 +71,8 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
-function handleSignIn() {
+const handleSignIn = async () => {
+
     let isValid = true;
 
     if (!email.value) {
@@ -96,11 +97,13 @@ function handleSignIn() {
 
     if (!isValid) return;
 
-    authStore.login(email.value, password.value)
-        .then(() => {
-            router.push('/user/default');
-        });
-}
+    try {
+        await authStore.login(email.value, password.value);
+        router.push('/user/default');
+    } catch (error) {
+        console.error('Login failed:', error);
+    }
+};
 
 function togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;

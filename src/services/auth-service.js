@@ -9,7 +9,7 @@ const authService = {
       console.log('Login response:', response.data);
       return response.data;
     } catch (error) {
-
+      console.error('Login error:', error);
       throw error;
     }
   },
@@ -47,11 +47,22 @@ const authService = {
     }
   },
 
+  // async logout(token) {
+  //   try {
+  //     console.log('verify response:', token);
+  //     await baseService.post('/auths/logout', { token });
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+
   async logout(token) {
     try {
+      console.log('Logout token:', token);
       const response = await baseService.post('/auths/logout', { token });
       return response.data;
     } catch (error) {
+      console.error('Logout error:', error);
       throw error;
     }
   },

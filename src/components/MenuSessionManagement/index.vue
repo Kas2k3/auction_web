@@ -3,25 +3,25 @@
         <a-card hoverable class="h-auto bg-white shadow-lg rounded-md mt-6">
             <h1 class="text-lg font-bold">Asset Management</h1>
             <div class="flex flex-col items-center justify-center mt-4 space-y-4">
-                <router-link to="/user/allProduct" class="w-full">
+                <router-link to="/user/allSession" class="w-full">
                     <button
                         class="w-full flex items-center justify-center p-2 bg-blue-50 text-black font-bold rounded-md hover:bg-teal-200 outline-gray-400 shadow-lg">
                         <img src="../../assets/icon/all.svg" alt="All Product" class="w-6 h-6 mr-3" />
-                        All Product
+                        All Session
                     </button>
                 </router-link>
-                <router-link to="/user/addProduct" class="w-full">
+                <router-link to="/user/addSession" class="w-full">
                     <button class="w-full flex items-center justify-center p-2 bg-blue-50 text-black font-bold rounded-md
                     hover:bg-teal-200 outline-gray-400 shadow-lg">
                         <img src="../../assets/icon/add.svg" alt="Add Product" class="w-6 h-6 mr-3" />
-                        Add Product
+                        Add Session
                     </button>
                 </router-link>
-                <router-link to="/user/deleteProduct" class="w-full">
+                <router-link to="/user/deleteSession" class="w-full">
                     <button class="w-full flex items-center justify-center p-2 bg-blue-50 text-black font-bold rounded-md
                     hover:bg-teal-200 outline-gray-400 shadow-lg">
                         <img src="../../assets/icon/delete.svg" alt="Delete Product" class="w-6 h-6 mr-3" />
-                        Delete Product
+                        Delete Session
                     </button>
                 </router-link>
             </div>
