@@ -11,6 +11,7 @@ import History from "../views/home/history/index.vue";
 import News from "../views/home/news/index.vue";
 import Introduction from "../views/home/introduction/index.vue";
 import Contact from "../views/home/contact/index.vue";
+import SessionDetail from '../views/user/sessionManagement/viewSession/index.vue';
 
 const routes = [
     {

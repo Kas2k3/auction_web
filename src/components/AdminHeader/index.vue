@@ -143,7 +143,7 @@
                                 Profile
                             </a>
                         </a-menu-item>
-                        <a-menu-item @click="navigateToAllProduct">
+                        <a-menu-item @click="navigateToRequestSession">
                             <a class="font-bold flex items-center">
                                 <img src="../../assets/icon/asset-management.svg" alt="Asset Management"
                                     class="h-5 w-5 inline-block mr-2" />
@@ -192,6 +192,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../stores/auth/auth-store';
+import { message } from 'ant-design-vue';
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -207,8 +208,8 @@ const hideDropdown = () => {
     showDropdown.value = false;
 };
 
-const navigateToAllProduct = () => {
-    router.push('/user/allProduct');
+const navigateToRequestSession = () => {
+    router.push('/user/requestSession');
     hideDropdown();
 };
 

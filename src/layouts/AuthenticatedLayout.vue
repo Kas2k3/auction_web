@@ -1,6 +1,6 @@
 <template>
     <TheUserHeader />
-    <div class="w-full h-full ">
+    <div class="w-full h-full bg-blue-100">
         <div class="p-4">
             <router-view></router-view>
         </div>

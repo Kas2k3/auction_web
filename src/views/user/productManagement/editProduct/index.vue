@@ -1,28 +1,25 @@
 <template>
     <div class="flex mt-20 mx-5 space-x-5">
-        <div class="w-1/5 ml-4 mr-4">
-            <MenuProductManagement />
-        </div>
-        <div class="w-4/5 container border-l bg-white mx-auto p-10  rounded-md shadow-lg mt-6">
+        <div class=" container border-l bg-white mx-auto p-10 rounded-md shadow-lg mt-6">
+            <div class=" flex absolute top-32 right-12 m-4 space-x-2">
+                <button @click="goBack"
+                    class="flex justify-center items-center w-12 bg-teal-300 text-black hover:bg-teal-400 outline-gray-600 shadow-lg font-bold py-2 rounded">
+                    <img src="../../../../assets/icon/pencil2.svg" alt="Cancel" class="w-6 h-6" />
+                </button>
+                <button @click="goBack"
+                    class="flex justify-center items-center w-12 bg-red-300 text-black hover:bg-red-400 outline-gray-600 shadow-lg font-bold py-2 rounded">
+                    <img src="../../../../assets/icon/cancel.svg" alt="Cancel" class="w-6 h-6" />
+                </button>
+            </div>
             <div class="relative w-full max-w-md mx-auto">
-                <h1 class="text-2xl font-bold text-center text-gray-800">
-                    Add Product
-                </h1>
+                <h1 class="text-2xl font-bold text-center text-gray-800">Demo Product</h1>
                 <div class="border-b-2 border-zinc-400 mt-2 mb-8"></div>
             </div>
-            <form @submit.prevent="submitProduct" class="flex space-x-8">
-                <div class="flex-1">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-3">Upload Image</label>
-                        <input type="file" @change="handleImageUpload"
-                            class="form-input w-full border border-gray-300 rounded-md px-2 py-2" />
-                    </div>
-                    <div v-if="imagePreview" class="mb-4">
-                        <img :src="imagePreview" alt="Product Image"
-                            class="w-full h-auto border border-gray-300 rounded-md" />
-                    </div>
-                </div>
 
+            <form @submit.prevent="submitAuction" class=" flex space-x-8">
+                <div class="flex-1">
+                    <img src="../../../../assets/product.jpg" alt="Session" class="h-100 w-100" />
+                </div>
                 <div class="flex-1">
                     <div class="mb-5">
                         <label for="name" class="block text-gray-700 mb-3">Product Name</label>
@@ -31,7 +28,7 @@
                     </div>
 
                     <div class="mb-5">
-                        <label for="category" class="block text-gray-700 mb-3">Category</label>
+                        <label for="category" class="block text-gray-700 mb-3">Classification</label>
                         <select id="category" v-model="product.category"
                             class="form-select w-full border border-gray-300 rounded-md px-2 py-2">
                             <option value="" disabled>Select product type</option>
@@ -44,22 +41,15 @@
                         <textarea id="description" v-model="product.description"
                             class="form-textarea w-full border border-gray-300 rounded-md px-2 py-2"></textarea>
                     </div>
-
-                    <button type="submit"
-                        class="w-full bg-teal-400 hover:bg-teal-500 outline-gray-400 shadow-lg text-white font-bold py-2 px-4 rounded">
-                        Confirm
-                    </button>
                 </div>
             </form>
         </div>
     </div>
-
     <TheChevron />
 </template>
 
 <script setup>
 import TheChevron from '../../../../components/Chevron/index.vue';
-import MenuProductManagement from '../../../../components/MenuProductManagement/index.vue';
 import { ref } from 'vue';
 import baseService from '../../../../services/base-service';
 
@@ -105,4 +95,7 @@ const handleImageUpload = (event) => {
     }
 };
 
+const goBack = () => {
+    window.history.back();
+};
 </script>
