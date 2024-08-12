@@ -1,11 +1,11 @@
 <template>
     <div class="container mx-auto max-w-sm p-0">
-        <img src="../../../assets/logo.png" alt="Logo" class="h-56 ml-16 flex items-center justify-center">
+        <img src="../../../assets/images/logo.png" alt="Logo" class="h-56 ml-16 flex items-center justify-center">
         <router-link to="/login" class="flex items-center space-x-2 -ml-10 mb-4 text-gray-600 hover:text-gray-900">
             <img src="../../../assets/icon/auth-back.svg" alt="Back" class="w-6 h-6" />
             <span>Back</span>
         </router-link>
-        <h1 class="flex items-center justify-center text-2xl font-bold mb-4">Forgot your password?</h1>
+        <h1 class="flex items-center justify-center text-2xl font-bold mb-4">Verification</h1>
         <h2>
             Verification code is sent to your email. Please check and enter the verification code:
         </h2>
@@ -19,34 +19,36 @@
             </div>
 
             <!-- resend btn -->
-            <div class="flex flex-col items-center justify-center mt-6 mb-6">
-                <button :disabled="isResendDisabled" @click="resendCode"
-                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded disabled:bg-gray-400">
-                    Resend Code
-                </button>
-                <p v-if="!isResendDisabled" class="mt-2 text-sm text-gray-600">Resend available in {{ countdown }}
-                    seconds</p>
-            </div>
+
 
             <button type="submit"
                 class="flex items-center justify-center w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 Next
             </button>
         </form>
+        <div class="flex flex-row justify-around mt-6 mb-6">
+            <button :disabled="isResendDisabled" @click="resendCode"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded disabled:bg-gray-400">
+                Resend Code
+            </button>
+            <p v-if="isResendDisabled" class="mt-2 text-sm text text-gray-600">
+                Resend available in {{ countdown }} seconds </p>
+        </div>
     </div>
 </template>
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../../stores/auth/auth-store';
+import { useStore } from 'vuex';
 import { message } from 'ant-design-vue';
 
-const authStore = useAuthStore();
 const codes = reactive(['', '', '', '', '', '']);
-const router = useRouter();
 const countdown = ref(30);
 const isResendDisabled = ref(true);
+
+const router = useRouter();
+const store = useStore();
 
 const checkBackspace = (event, index) => {
     if (event.key === 'Backspace') {
@@ -76,7 +78,7 @@ const isNumber = (event) => {
 
 const startCountdown = () => {
     countdown.value = 30;
-    isResendDisabled.value = true;
+    // isResendDisabled.value = true;
     const timer = setInterval(() => {
         countdown.value -= 1;
         if (countdown.value <= 0) {
@@ -88,7 +90,9 @@ const startCountdown = () => {
 
 const resendCode = async () => {
     try {
-        await authStore.resendOTP();
+        const email = store.getters.getEmail;
+        await store.dispatch('resendOtp', { email });
+        isResendDisabled.value = !isResendDisabled.value;
         message.success('Verification code resent successfully');
         startCountdown();
     } catch (error) {
@@ -99,9 +103,17 @@ const resendCode = async () => {
 
 async function onSubmit() {
     const otp = codes.join('');
+    const email = store.getters.getEmail;
+    console.log(email);
+
+    const data = {
+        email: email,
+        otp: otp,
+    };
+
     try {
-        await authStore.verifyOTP(otp);
-        router.push('/user/changePassword');
+        await store.dispatch('verify', data);
+        router.push('/');
     } catch (error) {
         console.error('Verification error:', error);
         message.error('Verification failed. Please try again.');
@@ -113,6 +125,4 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-@import './style.scss';
-</style>
+<style lang="scss" src="./style.scss" scoped />

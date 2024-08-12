@@ -84,6 +84,7 @@
 import { ref } from 'vue';
 import TheChevron from '../../../../components/Chevron/index.vue';
 import Profile from '../../../../components/Profile/index.vue';
+import { useAuthStore } from '../../../../stores/auths/useAuthStore';
 
 const profile = ref({
     fullName: '',
@@ -95,6 +96,8 @@ const profile = ref({
     phone: ''
 });
 
+const authStore = useAuthStore();
+
 const submitProfile = () => {
     console.log(profile.value);
 };
@@ -105,7 +108,7 @@ const handleAvatarUpload = (event) => {
         const formData = new FormData();
         formData.append('file', file);
 
-        baseService.post('/products/upload-avatar', formData)
+        authStore.post('/products/upload-avatar', formData)
             .then(response => {
                 imagePreview.value = URL.createObjectURL(file);
                 product.value.image = response.data;

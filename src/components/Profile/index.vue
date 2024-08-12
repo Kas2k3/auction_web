@@ -17,11 +17,13 @@
                         Edit Profile
                     </button>
                 </router-link>
-                <button class="w-full flex items-center justify-center p-2 bg-blue-50 text-black font-bold rounded-md
+                <router-link to="/user/changePassword" class="w-full">
+                    <button class="w-full flex items-center justify-center p-2 bg-blue-50 text-black font-bold rounded-md
                     hover:bg-teal-200 outline-gray-400 shadow-lg">
-                    <img src="../../assets/icon/delete-account.svg" alt="Delete Product" class="w-6 h-6 mr-3" />
-                    Delete Account
-                </button>
+                        <img src="../../assets/icon/change-password.svg" alt="Delete Product" class="w-6 h-6 mr-3" />
+                        Change Password
+                    </button>
+                </router-link>
             </div>
         </a-card>
     </div>

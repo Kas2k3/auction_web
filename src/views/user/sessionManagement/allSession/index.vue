@@ -5,19 +5,15 @@
         </div>
         <div class="w-4/5 container border-l bg-white mx-auto p-10 rounded-md shadow-lg mt-6">
             <div class="relative w-full max-w-md mx-auto">
-                <h1 class="text-2xl font-bold text-center text-gray-800">
-                    All Sessions
-                </h1>
+                <h1 class="text-2xl font-bold text-center text-gray-800">All Sessions</h1>
                 <div class="border-b-2 border-zinc-400 mt-2 mb-8"></div>
             </div>
             <div class="session-list grid grid-cols-4 gap-4">
                 <div v-for="session in paginatedSessions" :key="session.id"
-                    class="session-item bg-white shadow-lg rounded-lg cursor-pointer"
-                    @click="goToSessionDetail(session.id)">
-
+                    class="session-item bg-white shadow-lg rounded-lg cursor-pointer" @click="openModal(session)">
                     <a-card hoverable>
                         <template #cover>
-                            <img src=" ../../../../assets/product.jpg" alt="Session" />
+                            <img src="../../../../assets/images/product.jpg" alt="Session" />
                         </template>
                         <a-card-meta :title="session.title" :description="session.status">
                             <template #avatar>
@@ -38,29 +34,27 @@
             <div class="flex justify-center mt-4">
                 <a-pagination v-model:current="currentPage" :total="totalSessions" :pageSize="pageSize * 2" />
             </div>
+            <SessionModal :isVisible="isModalVisible" :session="selectedSession" @close="closeModal" />
         </div>
     </div>
 </template>
 
 <script setup>
 import MenuSessionManagement from '../../../../components/MenuSessionManagement/index.vue';
+import SessionModal from '../sessionDetail/index.vue';
 import { ref, computed } from 'vue';
 
 const sessions = ref([
-    { id: 1, title: 'Demo Session', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
-    { title: 'Session 2', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
-    { title: 'Session 3', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
-    { title: 'Session 4', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
-    { title: 'Session 5', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
-    { title: 'Session 6', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
-    { title: 'Session 7', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
-    { title: 'Session 8', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
-    { title: 'Session 9', avatar: 'https://joeschmoe.io/api/v1/random', status: "Pending" },
+    { id: 1, title: 'Demo Session', avatar: 'https://joeschmoe.io/api/v1/random', status: 'Pending', image: 'https://joeschmoe.io/api/v1/random', description: 'Description here', startBid: '20.000.000VND', pricePerStep: '10.000.000VND', startTime: '2024-01-01', endTime: '2024-01-02' },
+    { id: 2, title: 'Session 2', avatar: 'https://joeschmoe.io/api/v1/random', status: 'Pending' },
+    { id: 3, title: 'Session 3', avatar: 'https://joeschmoe.io/api/v1/random', status: 'Pending' }
 ]);
 
 const currentPage = ref(1);
 const pageSize = 4;
 const totalSessions = sessions.value.length;
+const isModalVisible = ref(false);
+const selectedSession = ref(null);
 
 const paginatedSessions = computed(() => {
     const start = (currentPage.value - 1) * pageSize * 2;
@@ -80,10 +74,14 @@ const nextSlide = () => {
     }
 };
 
-const goToSessionDetail = (id) => {
-    router.push({ name: 'SessionDetail', params: { id } });
+const openModal = (session) => {
+    selectedSession.value = session;
+    isModalVisible.value = true;
 };
 
+const closeModal = () => {
+    isModalVisible.value = false;
+};
 </script>
 
 <style scoped>

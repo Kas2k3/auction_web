@@ -12,15 +12,16 @@
             </div>
             <form @submit.prevent="submitProduct" class="flex space-x-8">
                 <div class="flex-1">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-3">Upload Image</label>
-                        <input type="file" @change="handleImageUpload"
-                            class="form-input w-full border border-gray-300 rounded-md px-2 py-2" />
+                    <div class="grid grid-cols-6 gap-2">
+                        <div v-for="(image, index) in images" :key="index" class="relative group">
+                            <img :src="image.url" alt="Product" class="w-full h-15 object-cover rounded-md" />
+                            <button @click="removeImage(index)"
+                                class="absolute top-0 right-0 bg-red-500 text-white rounded-md p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                &times;
+                            </button>
+                        </div>
                     </div>
-                    <div v-if="imagePreview" class="mb-4">
-                        <img :src="imagePreview" alt="Product Image"
-                            class="w-full h-auto border border-gray-300 rounded-md" />
-                    </div>
+                    <input type="file" @change="handleImageUpload" class="mt-4" multiple />
                 </div>
 
                 <div class="flex-1">
@@ -61,7 +62,6 @@
 import TheChevron from '../../../../components/Chevron/index.vue';
 import MenuProductManagement from '../../../../components/MenuProductManagement/index.vue';
 import { ref } from 'vue';
-import baseService from '../../../../services/base-service';
 
 const product = ref({
     name: '',
@@ -74,35 +74,39 @@ const imagePreview = ref(null);
 
 const categories = ['Art', 'License Plate', 'Vehicles', 'Antiques', 'Other'];
 
-const submitProduct = () => {
-    baseService.post('/products', product.value)
-        .then(() => {
-            alert('Product added successfully!');
-            product.value = {
-                name: '',
-                category: '',
-                description: '',
-                image: ''
-            };
-            imagePreview.value = null;
-        });
-};
+// const submitProduct = () => {
+//     baseService.post('/products', product.value)
+//         .then(() => {
+//             alert('Product added successfully!');
+//             product.value = {
+//                 name: '',
+//                 category: '',
+//                 description: '',
+//                 image: ''
+//             };
+//             imagePreview.value = null;
+//         });
+// };
+
+const images = ref([]);
 
 const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        baseService.post('/products/upload-image', formData)
-            .then(response => {
-                imagePreview.value = URL.createObjectURL(file);
-                product.value.image = response.data;
-            })
-            .catch(error => {
-                console.error('Error uploading image:', error);
+    const files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            images.value.push({
+                file: file,
+                url: e.target.result
             });
+        };
+        reader.readAsDataURL(file);
     }
+};
+
+const removeImage = (index) => {
+    images.value.splice(index, 1);
 };
 
 </script>

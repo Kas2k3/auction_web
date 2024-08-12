@@ -1,12 +1,15 @@
 <template>
     <div class="container mx-auto max-w-sm p-8">
-        <img src="../../../assets/logo.png" alt="Logo" class="h-130 h-130 -mt-10 flex items-center justify-center">
+        <img src="../../../assets/images/logo.png" alt="Logo"
+            class="h-130 h-130 -mt-10 flex items-center justify-center" />
         <router-link to="/home/default"
             class="flex items-center space-x-2 -ml-16 mb-4 text-gray-600 hover:text-gray-900">
             <img src="../../../assets/icon/auth-back.svg" alt="Back" class="w-6 h-6" />
             <span>Back</span>
         </router-link>
-        <h1 class="flex items-center justify-center text-2xl font-bold mb-4">Login</h1>
+        <h1 class="flex items-center justify-center text-2xl font-bold mb-4">
+            Login
+        </h1>
 
         <form @submit.prevent="handleSignIn">
             <div class="mb-4">
@@ -26,12 +29,14 @@
                             class="w-4 h-4 cursor-pointer" />
                     </button>
                 </div>
-                <span v-if="validation.password" class="text-red-500">{{ validation.password }}</span>
+                <span v-if="validation.password" class="text-red-500">{{
+                    validation.password
+                    }}</span>
             </div>
 
             <div class="flex items-center mb-6">
                 <input type="checkbox" id="rememberMe" v-model="rememberMe" />
-                <label for="rememberMe" class="text-gray-700 ml-2">Remember me?</label>
+                <label for="rememberMe" class="text-gray-700 ml-2 text-sm">Remember me?</label>
                 <router-link to="/login/forgotPassword" class="text-sm text-blue-600 underline ml-14">Forgot
                     password?</router-link>
             </div>
@@ -44,68 +49,142 @@
         </form>
 
         <p class="text-sm text-gray-600 mt-6">
-            Do not have an account? <router-link to="/register" class="text-blue-600 underline ml-1">Register
-                now</router-link>
+            Do not have an account?
+            <router-link to="/register" class="text-blue-600 underline ml-1">Register now</router-link>
         </p>
     </div>
 </template>
-
+<!-- 
+  <script setup>
+  import { ref, reactive, computed } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useAuthStore } from '../../../stores/auth/auth-store'
+  
+  const email = ref('');
+  const password = ref('');
+  const rememberMe = ref(false);
+  const validation = reactive({ email: null, password: null });
+  const router = useRouter();
+  const authStore = useAuthStore();
+  
+  const loading = computed(() => authStore.loading);
+  const isPasswordVisible = ref(false);
+  const passwordType = computed(() => isPasswordVisible.value ? 'text' : 'password');
+  
+  function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(String(email).toLowerCase());
+  }
+  
+  const handleSignIn = async () => {
+  
+      let isValid = true;
+  
+      if (!email.value) {
+          validation.email = 'Email is required.';
+          isValid = false;
+      } else if (!validateEmail(email.value)) {
+          validation.email = 'Email is not valid.';
+          isValid = false;
+      } else {
+          validation.email = null;
+      }
+  
+      if (!password.value) {
+          validation.password = 'Password is required.';
+          isValid = false;
+      } else if (password.value.length < 4) {
+          validation.password = 'You need to enter 4 characters or more';
+          isValid = false;
+      } else {
+          validation.password = null;
+      }
+  
+      if (!isValid) return;
+  
+      try {
+          await authStore.login(email.value, password.value);
+          // window.location.href = '/user/default';
+         router.push('/user/default');
+          
+      } catch (error) {
+          console.error('Login failed:', error);
+      }
+  };
+  
+  function togglePasswordVisibility() {
+      isPasswordVisible.value = !isPasswordVisible.value;
+  } -->
+<!-- </script> -->
 <script setup>
-import { ref, reactive, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../../stores/auth/auth-store'
+import { ref, reactive, computed } from "vue";
+import { useRouter } from "vue-router";
+// import { useStore } from "vuex";
+import { useAuthStore } from '../../../stores/auths/useAuthStore';
 
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
 const rememberMe = ref(false);
 const validation = reactive({ email: null, password: null });
+
+const isPasswordVisible = ref(false);
+const passwordType = computed(() =>
+    isPasswordVisible.value ? "text" : "password"
+);
+
 const router = useRouter();
 const authStore = useAuthStore();
 
-const loading = computed(() => authStore.loading);
-const isPasswordVisible = ref(false);
-const passwordType = computed(() => isPasswordVisible.value ? 'text' : 'password');
+const loading = computed(() => authStore.isLoading);
 
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
 }
+function togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
+}
 
 const handleSignIn = async () => {
-
     let isValid = true;
 
     if (!email.value) {
-        validation.email = 'Email is required.';
+        validation.email = "Email is required.";
         isValid = false;
     } else if (!validateEmail(email.value)) {
-        validation.email = 'Email is not valid.';
+        validation.email = "Email is not valid.";
         isValid = false;
     } else {
         validation.email = null;
     }
 
     if (!password.value) {
-        validation.password = 'Password is required.';
+        validation.password = "Password is required.";
         isValid = false;
     } else if (password.value.length < 4) {
-        validation.password = 'You need to enter 4 characters or more';
+        validation.password = "You need to enter 4 characters or more";
         isValid = false;
     } else {
         validation.password = null;
     }
 
     if (!isValid) return;
-
     try {
-        await authStore.login(email.value, password.value);
-        router.push('/user/default');
+        // const response = await authApi.login(email.value, password.value);
+        await authStore.login({
+            email: email.value,
+            password: password.value,
+        });
+
+        const isAdmin = authStore.getIsAdmin;
+        console.log(isAdmin);
+        if (isAdmin) {
+            router.push("/admin/requestSession");
+        } else {
+            router.push("/user/default");
+        }
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error("Login failed:", error);
     }
 };
-
-function togglePasswordVisibility() {
-    isPasswordVisible.value = !isPasswordVisible.value;
-}
 </script>

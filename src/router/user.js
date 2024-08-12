@@ -2,15 +2,16 @@ import AuthenticatedLayout from "../layouts/AuthenticatedLayout.vue";
 import Default from "../views/home/default/index.vue";
 import Profile from "../views/user/profileManagement/profile/index.vue";
 import EditProfile from "../views/user/profileManagement/editProfile/index.vue";
+import ChangePassword from "../views/user/profileManagement/changePassword/index.vue";
+import AllAuction from "../views/user/auctionManagement/allAuction/index.vue";
+import JoinAuction from "../views/user/auctionManagement/joinAuction/index.vue";
 import AllSession from "../views/user/sessionManagement/allSession/index.vue";
 import AddSession from "../views/user/sessionManagement/addSession/index.vue";
-import DeleteSession from "../views/user/sessionManagement/deleteSession/index.vue";
-import ViewSession from "../views/user/sessionManagement/viewSession/index.vue";
-import ViewProduct from "../views/user/productManagement/viewProduct/index.vue";
+// import ViewSession from "../views/user/sessionManagement/sessionDetail/index.vue";
+import ViewProduct from "../views/user/productManagement/productDetail/index.vue";
 import EditProduct from "../views/user/productManagement/editProduct/index.vue";
 import AllProduct from "../views/user/productManagement/allProduct/index.vue";
 import AddProduct from "../views/user/productManagement/addProduct/index.vue";
-import DeleteProduct from "../views/user/productManagement/deleteProduct/index.vue";
 import Product from "../views/home/product/index.vue";
 import Session from "../views/home/session/index.vue";
 import News from "../views/home/news/index.vue";
@@ -35,9 +36,26 @@ const userRoutes = [
                 component: EditProfile
             },
             {
+                path: "changePassword",
+                name: "user-changePassword",
+                component: ChangePassword,
+                meta: { requiresVerification: true }
+            },
+            {
                 path: "profile",
                 name: "user-profile",
                 component: Profile
+            },
+            {
+                path: "allAuction",
+                name: "all-auction",
+                component: AllAuction
+            },
+            {
+                path: '/auction/:id',
+                name: 'joinAuction',
+                component: JoinAuction,
+                props: true
             },
             {
                 path: "allSession",
@@ -49,16 +67,11 @@ const userRoutes = [
                 name: "add-session",
                 component: AddSession
             },
-            {
-                path: "deleteSession",
-                name: "delete-session",
-                component: DeleteSession
-            },
-            {
-                path: '/session/:id',
-                name: 'SessionDetail',
-                component: ViewSession
-            },
+            // {
+            //     path: '/session/:id',
+            //     name: 'SessionDetail',
+            //     component: ViewSession
+            // },
             {
                 path: '/product/:id',
                 name: 'ProductDetail',
@@ -78,11 +91,6 @@ const userRoutes = [
                 path: "addProduct",
                 name: "add-product",
                 component: AddProduct
-            },
-            {
-                path: "deleteProduct",
-                name: "delete-product",
-                component: DeleteProduct
             },
             {
                 path: "product",

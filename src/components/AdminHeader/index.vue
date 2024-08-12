@@ -7,7 +7,7 @@
                 </span>
             </div>
             <div class="w-8/10 flex">
-                <img src="../../assets/logo.png" alt="Logo" class="mt-2 mr-40 ml-6 h-20 w-30">
+                <img src="../../assets/images/logo.png" alt="Logo" class="mt-2 mr-40 ml-6 h-20 w-30">
                 <div class="hidden sm:flex items-center justify-center space-x-2 ml-6">
                     <ul class="navbar-item font-bold cursor-pointer">
                         <router-link to="/admin/default" active-class="text-green-600">
@@ -143,7 +143,7 @@
                                 Profile
                             </a>
                         </a-menu-item>
-                        <a-menu-item @click="navigateToRequestSession">
+                        <a-menu-item @click="navigateToAllProduct">
                             <a class="font-bold flex items-center">
                                 <img src="../../assets/icon/asset-management.svg" alt="Asset Management"
                                     class="h-5 w-5 inline-block mr-2" />
@@ -191,8 +191,9 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../stores/auth/auth-store';
+import { useAuthStore } from '../../stores/auths/useAuthStore';
 import { message } from 'ant-design-vue';
+
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -208,16 +209,16 @@ const hideDropdown = () => {
     showDropdown.value = false;
 };
 
-const navigateToRequestSession = () => {
-    router.push('/user/requestSession');
+const navigateToAllProduct = () => {
+    router.push('/user/allProduct');
     hideDropdown();
 };
 
 const handleLogout = async () => {
     try {
-        await authStore.logout();
+        await authStore.logout('logout');
         message.success('You have successfully logout');
-        router.push('/login');
+        router.push('/');
     } catch (error) {
         message.error('Logout. Please try again.');
     }

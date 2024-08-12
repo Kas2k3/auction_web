@@ -27,21 +27,20 @@
 
 
 <script>
-import baseService from '../../../services/base-service';
 
-export default {
-    data() {
-        return {
-            email: '',
-        };
-    },
-    methods: {
-        onSubmit() {
-            baseService.post('/users/forget-password', { email: this.email })
-                .then(() => {
-                    this.$router.push('/login/verify-otp');
-                });
-        },
-    },
-};
+// export default {
+//     data() {
+//         return {
+//             email: '',
+//         };
+//     },
+//     methods: {
+//         onSubmit() {
+//             baseService.post('/users/forget-password', { email: this.email })
+//                 .then(() => {
+//                     this.$router.push('/login/verify-otp');
+//                 });
+//         },
+//     },
+// };
 </script>

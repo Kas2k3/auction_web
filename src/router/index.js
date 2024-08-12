@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '../stores/auth/auth-store';
+import { useStore } from "vuex";
 import authRoutes from './auth';
 import userRoutes from './user';
 import adminRoutes from './admin';
@@ -11,7 +11,7 @@ import History from "../views/home/history/index.vue";
 import News from "../views/home/news/index.vue";
 import Introduction from "../views/home/introduction/index.vue";
 import Contact from "../views/home/contact/index.vue";
-import SessionDetail from '../views/user/sessionManagement/viewSession/index.vue';
+import { useAuthStore } from '../stores/auths/useAuthStore';
 
 const routes = [
     {
@@ -70,22 +70,24 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const authStore = useAuthStore();
-    const { isAuth, isAdmin, email } = authStore;
+
+    const useStore = useAuthStore();
+    const token = localStorage.getItem('token');
+    const isAdmin = useStore.isAdmin;
 
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
     const requiresVerification = to.matched.some(record => record.meta.requiresVerification);
 
-    if (requiresAuth && !isAuth) {
+    if (requiresAuth && !token) {
         next({ path: '/login', query: { redirect: to.fullPath } });
     } else if (requiresAdmin && !isAdmin) {
         next('/user/default');
-    } else if (requiresVerification && !email) {
-        next({ path: '/login/verify2', query: { redirect: to.fullPath } });
-    } else if (isAuth && (to.path === '/login' || to.path === '/register')) {
+        // } else if (requiresVerification && !email) {
+        //     next({ path: '/login/verify2', query: { redirect: to.fullPath } });
+    } else if (token && (to.path.startsWith('/login') || to.path === '/register' || to.path === '/home/default')) {
         next(isAdmin ? '/admin/requestSession' : '/user/default');
-    } else if (isAuth && isAdmin && to.path.startsWith('/user')) {
+    } else if (token && isAdmin && to.path.startsWith('/user')) {
         next('/admin/requestSession');
     } else {
         next();
